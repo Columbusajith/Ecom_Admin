@@ -26,6 +26,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
 
 const auth = getAuth(firebaseApp);
+console.log("auth", auth);
 const googleProvider = new GoogleAuthProvider();
 
 const SignUp = () => {
@@ -202,7 +203,7 @@ const SignUp = () => {
               setIsLoading(false);
             }
           } catch (error) {
-            console.log(error);
+            console.log("Error", error);
             setIsLoading(false);
           }
         });
