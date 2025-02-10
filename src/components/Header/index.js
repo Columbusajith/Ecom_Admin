@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/adminlogo.jpg";
 import Button from "@mui/material/Button";
 import { MdMenuOpen } from "react-icons/md";
 import { MdOutlineMenu } from "react-icons/md";
@@ -82,8 +82,8 @@ const Header = () => {
             {/* Logo Wraooer */}
             <div className="col-sm-2 part1 pr-0">
               <Link to={"/"} className="d-flex align-items-center logo">
-                <img src={logo} />
-                <span className="ml-2">ECOMMERCE</span>
+                <img src={logo} alt="logo" />
+                <span className="ml-3">Zivora</span>
               </Link>
             </div>
 
@@ -176,7 +176,7 @@ const Header = () => {
                         <div>
                           <div className="userImg">
                             <span className="rounded-circle">
-                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" />
+                              <img src="https://mironcoder-hotash.netlify.app/images/avatar/01.webp" alt="" />
                             </span>
                           </div>
                         </div>
