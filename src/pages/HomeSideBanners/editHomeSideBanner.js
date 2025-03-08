@@ -77,18 +77,22 @@ const EditBanner = () => {
   useEffect(() => {
     context.setProgress(20);
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then(
+              (res) => {
+                deleteData("/api/imageUpload/deleteAllImages");
+              }
+            );
           });
         });
-      });
+      }
     });
 
     fetchDataFromApi(`/api/homeSideBanners/${id}`).then((res) => {
       // setcategory(res);
-      console.log(res)
+      console.log(res);
       setPreviews(res.images);
       setcategoryVal(res?.catId);
       setSubCatVal(res?.subCatId);
@@ -176,15 +180,19 @@ const EditBanner = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then((res) => {
-                   // deleteData("/api/imageUpload/deleteAllImages");
+              if (Array.isArray(res)) {
+                res?.map((item) => {
+                  item?.images?.map((img) => {
+                    deleteImages(
+                      `/api/homeSideBanners/deleteImage?img=${img}`
+                    ).then((res) => {
+                      // deleteData("/api/imageUpload/deleteAllImages");
+                    });
                   });
                 });
-              });
+              }
             });
             context.setAlertBox({
               open: true,
@@ -200,13 +208,15 @@ const EditBanner = () => {
   const removeImg = async (index, imgUrl) => {
     const imgIndex = previews.indexOf(imgUrl);
 
-    deleteImages(`/api/homeSideBanners/deleteImage?img=${imgUrl}`).then((res) => {
-      context.setAlertBox({
-        open: true,
-        error: false,
-        msg: "Image Deleted!",
-      });
-    });
+    deleteImages(`/api/homeSideBanners/deleteImage?img=${imgUrl}`).then(
+      (res) => {
+        context.setAlertBox({
+          open: true,
+          error: false,
+          msg: "Image Deleted!",
+        });
+      }
+    );
 
     if (imgIndex > -1) {
       // only splice array when item is found
@@ -405,7 +415,6 @@ const EditBanner = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/homeBanner/upload")
                             }

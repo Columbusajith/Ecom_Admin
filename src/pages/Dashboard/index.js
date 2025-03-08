@@ -191,11 +191,11 @@ const Dashboard = () => {
 
     let sales = 0;
     fetchDataFromApi("/api/orders/").then((res) => {
-      res?.length !== 0 &&
-        res?.map((item) => {
+      if (res && Array.isArray(res) && res.length !== 0) {
+        res.forEach((item) => {
           sales += parseInt(item.amount);
         });
-
+      }
       setTotalSales(sales);
     });
 
@@ -209,13 +209,19 @@ const Dashboard = () => {
 
     fetchDataFromApi(`/api/orders/sales`).then((res) => {
       const sales = [];
-      res?.monthlySales?.length !== 0 &&
-        res?.monthlySales?.map((item) => {
+      if (
+        res &&
+        res.monthlySales &&
+        Array.isArray(res.monthlySales) &&
+        res.monthlySales.length !== 0
+      ) {
+        res.monthlySales.forEach((item) => {
           sales.push({
             name: item?.month,
             sales: parseInt(item?.sale),
           });
         });
+      }
 
       const uniqueArr = sales.filter(
         (obj, index, self) =>

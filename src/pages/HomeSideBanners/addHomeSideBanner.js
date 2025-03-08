@@ -73,15 +73,17 @@ const AddBanner = () => {
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then(
-            (res) => {
-              deleteData("/api/imageUpload/deleteAllImages");
-            }
-          );
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then(
+              (res) => {
+                deleteData("/api/imageUpload/deleteAllImages");
+              }
+            );
+          });
         });
-      });
+      }
     });
   }, []);
 
@@ -168,15 +170,19 @@ const AddBanner = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/homeSideBanners/deleteImage?img=${img}`).then((res) => {
-                 //   deleteData("/api/imageUpload/deleteAllImages");
+              if (Array.isArray(res)) {
+                res?.map((item) => {
+                  item?.images?.map((img) => {
+                    deleteImages(
+                      `/api/homeSideBanners/deleteImage?img=${img}`
+                    ).then((res) => {
+                      //   deleteData("/api/imageUpload/deleteAllImages");
+                    });
                   });
                 });
-              });
+              }
             });
             context.setAlertBox({
               open: true,
@@ -399,7 +405,6 @@ const AddBanner = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/homeSideBanners/upload")
                             }
