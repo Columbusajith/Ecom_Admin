@@ -63,13 +63,19 @@ const AddHomeSlide = () => {
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then(
+              (res) => {
+                deleteData("/api/imageUpload/deleteAllImages");
+              }
+            );
           });
         });
-      });
+      } else {
+        console.log("Response is not an array:", res);
+      }
     });
   }, []);
 
@@ -140,15 +146,19 @@ const AddHomeSlide = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
-                   // deleteData("/api/imageUpload/deleteAllImages");
+              if (Array.isArray(res)) {
+                res?.map((item) => {
+                  item?.images?.map((img) => {
+                    deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then(
+                      (res) => {
+                        // deleteData("/api/imageUpload/deleteAllImages");
+                      }
+                    );
                   });
                 });
-              });
+              }
             });
             context.setAlertBox({
               open: true,
@@ -164,18 +174,18 @@ const AddHomeSlide = () => {
   const removeImg = async (index, imgUrl) => {
     const imgIndex = previews.indexOf(imgUrl);
 
-      deleteImages(`/api/homeBanner/deleteImage?img=${imgUrl}`).then((res) => {
-        context.setAlertBox({
-          open: true,
-          error: false,
-          msg: "Image Deleted!",
-        });
+    deleteImages(`/api/homeBanner/deleteImage?img=${imgUrl}`).then((res) => {
+      context.setAlertBox({
+        open: true,
+        error: false,
+        msg: "Image Deleted!",
       });
+    });
 
-      if (imgIndex > -1) {
-        // only splice array when item is found
-        previews.splice(index, 1); // 2nd parameter means remove one item only
-      }
+    if (imgIndex > -1) {
+      // only splice array when item is found
+      previews.splice(index, 1); // 2nd parameter means remove one item only
+    }
   };
 
   const addHomeSlide = (e) => {
@@ -277,7 +287,6 @@ const AddHomeSlide = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/homeBanner/upload")
                             }

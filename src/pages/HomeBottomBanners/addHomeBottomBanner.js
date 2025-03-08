@@ -73,6 +73,7 @@ const AddBanner = () => {
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
+     if (Array.isArray(res)){
       res?.map((item) => {
         item?.images?.map((img) => {
           deleteImages(`/api/homeBottomBanners/deleteImage?img=${img}`).then(
@@ -82,6 +83,7 @@ const AddBanner = () => {
           );
         });
       });
+     }
     });
   }, []);
 
@@ -170,6 +172,7 @@ const AddBanner = () => {
             img_arr = [];
             uniqueArray=[];
             fetchDataFromApi("/api/imageUpload").then((res) => {
+              if (Array.isArray(res)) {
               res?.map((item) => {
                 item?.images?.map((img) => {
                   deleteImages(`/api/homeBottomBanners/deleteImage?img=${img}`).then((res) => {
@@ -177,6 +180,7 @@ const AddBanner = () => {
                   });
                 });
               });
+            }
             });
             context.setAlertBox({
               open: true,

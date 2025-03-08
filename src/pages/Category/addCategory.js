@@ -67,13 +67,15 @@ const AddCategory = () => {
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+              deleteData("/api/imageUpload/deleteAllImages");
+            });
           });
         });
-      });
+      }
     });
   }, []);
 
@@ -152,15 +154,24 @@ const AddCategory = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
-                  //  deleteData("/api/imageUpload/deleteAllImages");
-                  });
+              // Check if res is an array before mapping
+              if (Array.isArray(res)) {
+                res.forEach((item) => {
+                  if (item?.images && Array.isArray(item.images)) {
+                    item.images.forEach((img) => {
+                      deleteImages(`/api/category/deleteImage?img=${img}`).then(
+                        () => {
+                          deleteData("/api/imageUpload/deleteAllImages");
+                        }
+                      );
+                    });
+                  }
                 });
-              });
+              } else {
+                console.log("Response is not an array:", res);
+              }
             });
             context.setAlertBox({
               open: true,
@@ -316,7 +327,6 @@ const AddCategory = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/category/upload")
                             }

@@ -73,30 +73,34 @@ const AddBanner = () => {
 
   useEffect(() => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then(
+              (res) => {
+                deleteData("/api/imageUpload/deleteAllImages");
+              }
+            );
           });
         });
-      });
+      }
     });
   }, []);
 
-  useEffect(()=>{
-    const subCatArr=[];
+  useEffect(() => {
+    const subCatArr = [];
 
-    context.catData?.categoryList?.length !== 0 && context.catData?.categoryList?.map((cat, index) => {
-            if(cat?.children.length!==0){
-                cat?.children?.map((subCat)=>{
-                    subCatArr.push(subCat);
-                })
-            }
-    });
+    context.catData?.categoryList?.length !== 0 &&
+      context.catData?.categoryList?.map((cat, index) => {
+        if (cat?.children.length !== 0) {
+          cat?.children?.map((subCat) => {
+            subCatArr.push(subCat);
+          });
+        }
+      });
 
     setSubCatData(subCatArr);
-},[context.catData])
-
+  }, [context.catData]);
 
   let img_arr = [];
   let uniqueArray = [];
@@ -162,13 +166,15 @@ const AddBanner = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
+             Array.isArray(res) && res?.map((item) => {
                 item?.images?.map((img) => {
-                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
-                    //deleteData("/api/imageUpload/deleteAllImages");
-                  });
+                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then(
+                    (res) => {
+                      //deleteData("/api/imageUpload/deleteAllImages");
+                    }
+                  );
                 });
               });
             });
@@ -213,19 +219,18 @@ const AddBanner = () => {
     formFields.catId = id;
   };
 
-  const selectSubCat=(subCat, id)=>{
+  const selectSubCat = (subCat, id) => {
     setFormFields(() => ({
-        ...formFields,
-        subCat: subCat,
-        subCatName: subCat,
-        subCatId:id
-    }))
-
-}
+      ...formFields,
+      subCat: subCat,
+      subCatName: subCat,
+      subCatId: id,
+    }));
+  };
 
   const handleChangeSubCategory = (event) => {
     setSubCatVal(event.target.value);
-};
+  };
 
   const addHomeBanner = (e) => {
     e.preventDefault();
@@ -241,8 +246,7 @@ const AddBanner = () => {
     if (previews.length !== 0) {
       setIsLoading(true);
 
-
-        console.log(formFields)
+      console.log(formFields);
 
       postData(`/api/banners/create`, formFields).then((res) => {
         // console.log(res);
@@ -393,7 +397,6 @@ const AddBanner = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/banners/upload")
                             }

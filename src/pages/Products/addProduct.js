@@ -123,8 +123,8 @@ const ProductUpload = () => {
 
   useEffect(() => {
     const newData = {
-      value:'All',
-      label:'All'
+      value: "All",
+      label: "All",
     };
     const updatedArray = [...context?.countryList]; // Clone the array to avoid direct mutation
     updatedArray.unshift(newData); // Prepend data
@@ -136,13 +136,15 @@ const ProductUpload = () => {
     setCatData(context.catData);
 
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
+              deleteData("/api/imageUpload/deleteAllImages");
+            });
           });
         });
-      });
+      }
     });
 
     fetchDataFromApi("/api/productWeight").then((res) => {
@@ -338,15 +340,19 @@ const ProductUpload = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
-                   // deleteData("/api/imageUpload/deleteAllImages");
+              if (Array.isArray(res)) {
+                res?.map((item) => {
+                  item?.images?.map((img) => {
+                    deleteImages(`/api/products/deleteImage?img=${img}`).then(
+                      (res) => {
+                        // deleteData("/api/imageUpload/deleteAllImages");
+                      }
+                    );
                   });
                 });
-              });
+              }
             });
             context.setAlertBox({
               open: true,
@@ -531,7 +537,6 @@ const ProductUpload = () => {
       history("/products");
     });
   };
-
 
   const handleChangeLocation = (selectedOptions) => {
     setSelectedLocation(selectedOptions);

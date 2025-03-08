@@ -71,13 +71,15 @@ const EditCategory = () => {
   useEffect(() => {
     context.setProgress(20);
     fetchDataFromApi("/api/imageUpload").then((res) => {
-      res?.map((item) => {
-        item?.images?.map((img) => {
-          deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
-            deleteData("/api/imageUpload/deleteAllImages");
+      if (Array.isArray(res)) {
+        res?.map((item) => {
+          item?.images?.map((img) => {
+            deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+              deleteData("/api/imageUpload/deleteAllImages");
+            });
           });
         });
-      });
+      }
     });
 
     fetchDataFromApi(`/api/category/${id}`).then((res) => {
@@ -161,15 +163,19 @@ const EditCategory = () => {
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
-            uniqueArray=[];
+            uniqueArray = [];
             fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
-                  //  deleteData("/api/imageUpload/deleteAllImages");
+              if (Array.isArray(res)){
+                res?.map((item) => {
+                  item?.images?.map((img) => {
+                    deleteImages(`/api/category/deleteImage?img=${img}`).then(
+                      (res) => {
+                        //  deleteData("/api/imageUpload/deleteAllImages");
+                      }
+                    );
                   });
                 });
-              });
+              }
             });
             context.setAlertBox({
               open: true,
@@ -335,7 +341,6 @@ const EditCategory = () => {
                         <>
                           <input
                             type="file"
-                            
                             onChange={(e) =>
                               onChangeFile(e, "/api/category/upload")
                             }

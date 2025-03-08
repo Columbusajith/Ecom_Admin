@@ -115,7 +115,7 @@ const HomeSlidesList = () => {
               </thead>
 
               <tbody>
-                {slideList?.length !== 0 &&
+                {Array.isArray(slideList)&&slideList.length !== 0 &&
                   slideList?.map((item, index) => {
                     return (
                       <tr>
