@@ -135,7 +135,8 @@ const Orders = () => {
     window.scrollTo(0, 0);
 
     fetchDataFromApi(`/api/orders`).then((res) => {
-      setOrders(res);
+      // setOrders(res);
+      setOrders(Array.isArray(res) ? res : res.orders || []);
     });
   }, []);
 
@@ -254,8 +255,7 @@ const Orders = () => {
                 </TableHead>
 
                 <TableBody>
-               
-                  {orders?.length !== 0 &&
+                  {Array.isArray(orders) && orders.length > 0 &&
                     orders
                       ?.slice(
                         page1 * rowsPerPage,
@@ -265,7 +265,7 @@ const Orders = () => {
                       ?.map((order, index) => {
                         return (
                           <TableRow key={index}>
-                          <TableCell style={{ minWidth: columns.minWidth }}>
+                            <TableCell style={{ minWidth: columns.minWidth }}>
                               <span className="text-blue fonmt-weight-bold">
                                 {order?._id}
                               </span>
@@ -347,8 +347,6 @@ const Orders = () => {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-
-         
         </div>
       </div>
 
